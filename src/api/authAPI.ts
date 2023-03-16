@@ -41,7 +41,7 @@ export type UserType = {
     email: string
     registerData: string
     loginData: string
-    status: string
+    status: "blocked" | "active"
 }
 
 export type MeType = {

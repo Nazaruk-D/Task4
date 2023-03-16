@@ -36,7 +36,6 @@ export const logoutTC = createAsyncThunk(('auth/logout'), async (param, thunkAPI
         }
     } catch (err: any) {
         const error: AxiosError = err
-        console.log(error)
         return thunkAPI.rejectWithValue({errors: [error.message], fieldErrors: undefined})
     }
 })
@@ -49,13 +48,11 @@ export const registrationTC = createAsyncThunk<undefined, RegistrationDataType, 
             thunkAPI.dispatch(setAppStatusAC({status: 'succeeded'}))
             return
         } else {
-            console.log(res.message)
             return thunkAPI.rejectWithValue({errors: ["error"], fieldErrors: []})
         }
     } catch (err: any) {
         thunkAPI.dispatch(setAppStatusAC({status: 'failed'}))
         const error: AxiosError = err.response.data
-        console.log(error)
         return thunkAPI.rejectWithValue({errors: [error.message], fieldErrors: undefined})
     }
 })

@@ -1,7 +1,7 @@
 import {createBrowserRouter} from "react-router-dom";
 import Login from "../../feauters/auth/login/Login";
 import Registration from "../../feauters/auth/registration/Registration";
-import Table from "../content/Table/Table";
+import UsersTable from "../../feauters/usersTable/UsersTable";
 
 export const routes = {
     mainPage: '/',
@@ -12,7 +12,7 @@ export const routes = {
 export const router = createBrowserRouter([
     {
         path: routes.mainPage,
-        element: <Table/>,
+        element: <UsersTable/>,
         errorElement: <div>Error</div>
     },
     {

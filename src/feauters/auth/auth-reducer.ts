@@ -61,7 +61,8 @@ export const registrationTC = createAsyncThunk<undefined, RegistrationDataType, 
 const slice = createSlice({
     name: "auth",
     initialState: {
-        isLoggedIn: false
+        isLoggedIn: false,
+        isRegistered: false
     },
     reducers: {
         setIsLoggedInAC(state, action: PayloadAction<{ value: boolean }>) {
@@ -74,6 +75,10 @@ const slice = createSlice({
         })
         builder.addCase(logoutTC.fulfilled, (state) => {
             state.isLoggedIn = false
+            state.isRegistered = false
+        })
+        builder.addCase(registrationTC.fulfilled, (state) => {
+            state.isRegistered = true
         })
     }
 })

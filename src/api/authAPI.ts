@@ -6,7 +6,6 @@ export const authAPI = {
         return instance.get<ResponseType<MeType>>(`auth/me`)
     },
     registration(data: RegistrationDataType) {
-        console.log(data)
         return instance.post<ResponseType<UserType>>(`auth/register`, data).then((response) => response.data)
     },
     login(data: LoginDataType) {
@@ -39,7 +38,7 @@ export type UserType = {
     id: number
     name: string
     email: string
-    registerData: string
+    createdAt: string
     loginData: string
     status: "blocked" | "active"
 }

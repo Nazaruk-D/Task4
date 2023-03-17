@@ -29,7 +29,7 @@ const Row: React.FC<RowPropsType> = ({row}) => {
                     {row.email}
                 </TableCell>
                 <TableCell component="th" scope="row">
-                    {row.registerData}
+                    {row.createdAt}
                 </TableCell>
                 <TableCell component="th" scope="row">
                     {row.loginData}

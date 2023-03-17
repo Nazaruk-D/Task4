@@ -41,7 +41,7 @@ const slice = createSlice({
                 id: 1,
                 name: "Alex",
                 email: "test@mail.ru",
-                registerData: "22.02.2022",
+                createdAt: "22.02.2022",
                 loginData: "22.02.2022",
                 status: "blocked",
                 isSelected: false
@@ -50,7 +50,7 @@ const slice = createSlice({
                 id: 2,
                 name: "Alex",
                 email: "test@mail.ru",
-                registerData: "22.02.2022",
+                createdAt: "22.02.2022",
                 loginData: "22.02.2022",
                 status: "active",
                 isSelected: false
@@ -59,7 +59,7 @@ const slice = createSlice({
                 id: 3,
                 name: "Alex",
                 email: "test@mail.ru",
-                registerData: "22.02.2022",
+                createdAt: "22.02.2022",
                 loginData: "22.02.2022",
                 status: "active",
                 isSelected: true
@@ -81,8 +81,8 @@ const slice = createSlice({
             })
             builder.addCase(blockingUsersTC.fulfilled, (state, action) => {
                 state.map((x) => {
-                    const updatedObject = action.payload.users.find((y) => y.id === x.id);
-                    return updatedObject ? updatedObject : x;
+                    // const updatedObject = action.payload.users.find((y) => y.id === x.id);
+                    // return updatedObject ? updatedObject : x;
                 });
             })
         },

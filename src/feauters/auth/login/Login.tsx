@@ -3,7 +3,7 @@ import s from "./Login.module.scss"
 import {Button, FormControl, FormGroup, FormLabel, Grid, Paper, TextField} from "@mui/material";
 import {useFormik} from "formik";
 import {useAppDispatch, useAppSelector} from "../../../app/store/store";
-import {loginTC} from "../auth-reducer";
+import {loginTC, setIsisRegisteredAC} from "../auth-reducer";
 import {routes} from "../../../app/routes/routes";
 import {useNavigate} from "react-router-dom";
 import Header from "../../../app/header/Header";
@@ -41,6 +41,11 @@ const Login = () => {
 
 
     if (isLoggedIn) navigate(routes.mainPage)
+
+    function onClickHandler() {
+        dispatch(setIsisRegisteredAC({value: false}))
+        navigate(routes.registration)
+    }
 
     return (
         <>
@@ -81,7 +86,7 @@ const Login = () => {
                             <div className={s.title}>Or</div>
                             <div className={s.linebreak}><hr/></div>
                         </div>
-                        <Button className={s.button} variant={'contained'} color={'primary'} onClick={() => navigate(routes.registration)}>
+                        <Button className={s.button} variant={'contained'} color={'primary'} onClick={onClickHandler}>
                             Create Account
                         </Button>
                     </Paper>

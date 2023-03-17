@@ -1,6 +1,6 @@
 import {AxiosError} from "axios";
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {UserType} from "../../api/authAPI";
+import {authAPI, UserType} from "../../api/authAPI";
 import {setAppStatusAC} from "../../app/app-reducer";
 import {usersAPI} from "../../api/usersAPI";
 
@@ -21,16 +21,31 @@ export const fetchUsersTC = createAsyncThunk(('users/fetch'), async (param, {dis
     }
 })
 
-export const blockingUsersTC = createAsyncThunk(('auth/registration'), async (param: DomainUsersType[], thunkAPI) => {
+export const changeStatusUsersTC = createAsyncThunk(('auth/changeStatus'), async (param: { ids: number[], status: string }, thunkAPI) => {
     thunkAPI.dispatch(setAppStatusAC({status: 'loading'}))
     try {
-        const res = await usersAPI.blockingUsers(param)
+        const res = await usersAPI.changeStatusUsers(param)
         thunkAPI.dispatch(setAppStatusAC({status: 'succeeded'}))
-        return res.data
+        return {value: res.data}
     } catch (err: any) {
-        thunkAPI.dispatch(setAppStatusAC({status: 'failed'}))
-        const error: AxiosError = err.response.data
+        const error: AxiosError = err
         return thunkAPI.rejectWithValue({errors: [error.message], fieldErrors: undefined})
+    } finally {
+        thunkAPI.dispatch(setAppStatusAC({status: 'idle'}))
+    }
+})
+
+export const deleteUsersTC = createAsyncThunk(('auth/delete'), async (param: { ids: number[] }, thunkAPI) => {
+    thunkAPI.dispatch(setAppStatusAC({status: 'loading'}))
+    try {
+        const res = await usersAPI.deleteUsers(param)
+        thunkAPI.dispatch(setAppStatusAC({status: 'succeeded'}))
+        return res.data.ids
+    } catch (err: any) {
+        const error: AxiosError = err
+        return thunkAPI.rejectWithValue({errors: [error.message], fieldErrors: undefined})
+    } finally {
+        thunkAPI.dispatch(setAppStatusAC({status: 'idle'}))
     }
 })
 
@@ -50,11 +65,12 @@ const slice = createSlice({
             builder.addCase(fetchUsersTC.fulfilled, (state, action) => {
                 return action.payload.users.map(u => ({...u, isSelected: false}))
             })
-            builder.addCase(blockingUsersTC.fulfilled, (state, action) => {
-                // state.map((x) => {
-                // const updatedObject = action.payload.users.find((y) => y.id === x.id);
-                // return updatedObject ? updatedObject : x;
-                // });
+            builder.addCase(changeStatusUsersTC.fulfilled, (state, action: PayloadAction<{ value: { ids: number[], status: any } }>) => {
+                const {ids, status} = action.payload.value;
+                return state.map(u => ids.includes(u.id) ? {...u, status} : u);
+            })
+            builder.addCase(deleteUsersTC.fulfilled, (state, action) => {
+                return state.filter(u => !action.payload.includes(u.id));
             })
         },
 

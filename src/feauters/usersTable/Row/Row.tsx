@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useEffect} from 'react';
+import dateFormat from "dateformat";
 import {Checkbox, TableCell, TableRow} from "@mui/material";
 import {useAppDispatch} from "../../../app/store/store";
-import {changeUserStatusAC, DomainUsersType} from "../users-reducer";
+import {changeUserStatusAC, DomainUsersType, fetchUsersTC} from "../users-reducer";
 
 type RowPropsType = {
     row: DomainUsersType
@@ -13,6 +14,7 @@ const Row: React.FC<RowPropsType> = ({row}) => {
     const onChangeHandler = (id: number, status: boolean) => {
         dispatch(changeUserStatusAC({id, status}))
     }
+
 
     return (
             <TableRow sx={{'&:last-child td, &:last-child th': {border: 0}}}>
@@ -29,10 +31,10 @@ const Row: React.FC<RowPropsType> = ({row}) => {
                     {row.email}
                 </TableCell>
                 <TableCell component="th" scope="row">
-                    {row.createdAt}
+                    {dateFormat(row.createdAt, "mmmm dS, yyyy")}
                 </TableCell>
                 <TableCell component="th" scope="row">
-                    {row.loginData}
+                    {dateFormat(row.loginData, "mmmm dS, yyyy, h:MM:ss TT")}
                 </TableCell>
                 <TableCell component="th" scope="row">
                     {row.status}

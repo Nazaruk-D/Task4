@@ -9,12 +9,14 @@ import {useAppDispatch, useAppSelector} from "../store/store";
 import {logoutTC} from "../../feauters/auth/auth-reducer";
 import {useNavigate} from "react-router-dom";
 import {routes} from "../routes/routes";
+import {LinearProgress} from "@mui/material";
 
 
 const Header = () => {
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
     const isLoggedIn = useAppSelector(s => s.auth.isLoggedIn)
+    const status = useAppSelector(s => s.app.status)
 
     function onLogoutClickHandler() {
         dispatch(logoutTC())
@@ -41,6 +43,9 @@ const Header = () => {
                     }
                 </Toolbar>
             </AppBar>
+            {
+                status === "loading" && <LinearProgress color="secondary"/>
+            }
         </Box>
     );
 };

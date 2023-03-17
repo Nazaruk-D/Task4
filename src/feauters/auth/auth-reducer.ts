@@ -28,6 +28,7 @@ export const logoutTC = createAsyncThunk(('auth/logout'), async (param, thunkAPI
     try {
         const res = await authAPI.logout()
         if (res.statusCode === 200) {
+            thunkAPI.dispatch(setIsisRegisteredAC({value: false}))
             thunkAPI.dispatch(setAppStatusAC({status: 'succeeded'}))
             return
         } else {
@@ -67,6 +68,9 @@ const slice = createSlice({
     reducers: {
         setIsLoggedInAC(state, action: PayloadAction<{ value: boolean }>) {
             state.isLoggedIn = action.payload.value
+        },
+        setIsisRegisteredAC(state, action: PayloadAction<{ value: boolean }>) {
+            state.isRegistered = action.payload.value
         }
     },
     extraReducers: builder => {
@@ -75,7 +79,6 @@ const slice = createSlice({
         })
         builder.addCase(logoutTC.fulfilled, (state) => {
             state.isLoggedIn = false
-            state.isRegistered = false
         })
         builder.addCase(registrationTC.fulfilled, (state) => {
             state.isRegistered = true
@@ -84,4 +87,4 @@ const slice = createSlice({
 })
 
 export const authReducer = slice.reducer;
-export const {setIsLoggedInAC} = slice.actions;
+export const {setIsLoggedInAC, setIsisRegisteredAC} = slice.actions;

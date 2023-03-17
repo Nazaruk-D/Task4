@@ -5,8 +5,7 @@ import Row from "./Row/Row";
 import RestoreIcon from '@mui/icons-material/Restore';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import {useAppDispatch, useAppSelector} from "../../app/store/store";
-import {blockingUsersTC, changeAllUserStatusAC, fetchUsersTC} from "./users-reducer";
-import {logoutTC} from "../auth/auth-reducer";
+import {changeStatusUsersTC, changeAllUserStatusAC, fetchUsersTC, deleteUsersTC} from "./users-reducer";
 import {routes} from "../../app/routes/routes";
 import {useNavigate} from "react-router-dom";
 import Header from "../../app/header/Header";
@@ -19,23 +18,37 @@ const UsersTable = () => {
     const [isAllUsers, setIsAllUsers] = useState(false)
     const users = useAppSelector(s => s.users)
 
+    const selectedUsers = () => {
+        const selectedUsers: number[] = [];
+        users.filter(u => u.isSelected).map(u => selectedUsers.push(u.id)).join()
+        return selectedUsers
+    }
+
     const onChangeHandler = () => {
         setIsAllUsers(!isAllUsers)
         dispatch(changeAllUserStatusAC(!isAllUsers))
     }
 
-    const blockingUsers = () => {
-        // const xxx = users.filter(u => u.isSelected)
-        // dispatch(blockingUsersTC(xxx))
+    const blockStatusUsers = () => {
+        dispatch(changeStatusUsersTC({ids: selectedUsers(), status: "blocked"}))
+
     }
 
+    const activeStatusUsers = () => {
+        dispatch(changeStatusUsersTC({ids: selectedUsers(), status: "active"}))
+
+    }
+
+    const deleteUsers = () => {
+        dispatch(deleteUsersTC({ids: selectedUsers()}))
+    }
     useEffect(() => {
         dispatch(fetchUsersTC())
-    },[])
+    }, [dispatch])
 
     useEffect(() => {
         if (!isLoggedIn) navigate(routes.login)
-    },[isLoggedIn])
+    }, [isLoggedIn])
 
     return (
         <>
@@ -43,10 +56,15 @@ const UsersTable = () => {
             <div className={s.tableContainer}>
                 <div className={s.toolbarContainer}>
                     <div className={s.toolbar}>
-                        <div className={s.icon}><Button variant="outlined" color={"error"}
-                                                        onClick={blockingUsers}>Blocked</Button></div>
-                        <div className={s.icon}><RestoreIcon fontSize={"medium"}/></div>
-                        <div className={s.icon}><DeleteForeverIcon fontSize={"medium"}/></div>
+                        <div className={s.icon}>
+                            <Button variant="outlined" color={"error"} onClick={blockStatusUsers}>Blocked</Button>
+                        </div>
+                        <div className={s.icon}>
+                            <RestoreIcon fontSize={"medium"} onClick={activeStatusUsers}/>
+                        </div>
+                        <div className={s.icon}>
+                            <DeleteForeverIcon fontSize={"medium"} onClick={deleteUsers}/>
+                        </div>
                     </div>
                 </div>
                 <TableContainer component={Paper} className={s.tableBlock}>
@@ -67,10 +85,10 @@ const UsersTable = () => {
                                 <TableCell align="left" style={{fontWeight: '600'}} width={"15%"}>
                                     Email
                                 </TableCell>
-                                <TableCell align="left" style={{fontWeight: '600'}} width={"15%"}>
+                                <TableCell align="left" style={{fontWeight: '600'}} width={"12%"}>
                                     Date of registration
                                 </TableCell>
-                                <TableCell align="left" style={{fontWeight: '600'}} width={"15%"}>
+                                <TableCell align="left" style={{fontWeight: '600'}} width={"18%"}>
                                     Last login date
                                 </TableCell>
                                 <TableCell align="left" style={{fontWeight: '600'}} width={"10%"}>

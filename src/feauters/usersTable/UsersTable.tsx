@@ -5,7 +5,7 @@ import Row from "./Row/Row";
 import RestoreIcon from '@mui/icons-material/Restore';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import {useAppDispatch, useAppSelector} from "../../app/store/store";
-import {blockingUsersTC, changeAllUserStatusAC} from "./users-reducer";
+import {blockingUsersTC, changeAllUserStatusAC, fetchUsersTC} from "./users-reducer";
 import {logoutTC} from "../auth/auth-reducer";
 import {routes} from "../../app/routes/routes";
 import {useNavigate} from "react-router-dom";
@@ -25,15 +25,13 @@ const UsersTable = () => {
     }
 
     const blockingUsers = () => {
-        const xxx = users.filter(u => u.isSelected)
-        dispatch(blockingUsersTC(xxx))
-
+        // const xxx = users.filter(u => u.isSelected)
+        // dispatch(blockingUsersTC(xxx))
     }
 
-    function onClickHandler() {
-        dispatch(logoutTC())
-    }
-
+    useEffect(() => {
+        dispatch(fetchUsersTC())
+    },[])
 
     useEffect(() => {
         if (!isLoggedIn) navigate(routes.login)

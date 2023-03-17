@@ -1,6 +1,6 @@
 import {AxiosError} from "axios";
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {authAPI, RegistrationDataType, UserType} from "../../api/authAPI";
+import {UserType} from "../../api/authAPI";
 import {setAppStatusAC} from "../../app/app-reducer";
 import {usersAPI} from "../../api/usersAPI";
 
@@ -26,7 +26,7 @@ export const blockingUsersTC = createAsyncThunk(('auth/registration'), async (pa
     try {
         const res = await usersAPI.blockingUsers(param)
         thunkAPI.dispatch(setAppStatusAC({status: 'succeeded'}))
-        return {users: res.data}
+        return res.data
     } catch (err: any) {
         thunkAPI.dispatch(setAppStatusAC({status: 'failed'}))
         const error: AxiosError = err.response.data
@@ -36,36 +36,7 @@ export const blockingUsersTC = createAsyncThunk(('auth/registration'), async (pa
 
 const slice = createSlice({
         name: "users",
-        initialState: [
-            {
-                id: 1,
-                name: "Alex",
-                email: "test@mail.ru",
-                createdAt: "22.02.2022",
-                loginData: "22.02.2022",
-                status: "blocked",
-                isSelected: false
-            },
-            {
-                id: 2,
-                name: "Alex",
-                email: "test@mail.ru",
-                createdAt: "22.02.2022",
-                loginData: "22.02.2022",
-                status: "active",
-                isSelected: false
-            },
-            {
-                id: 3,
-                name: "Alex",
-                email: "test@mail.ru",
-                createdAt: "22.02.2022",
-                loginData: "22.02.2022",
-                status: "active",
-                isSelected: true
-            },
-
-        ] as DomainUsersType[],
+        initialState: [] as DomainUsersType[],
         reducers: {
             changeUserStatusAC(state, action: PayloadAction<{ id: number, status: boolean }>) {
                 const index = state.findIndex(u => u.id === action.payload.id)
@@ -80,10 +51,10 @@ const slice = createSlice({
                 return action.payload.users.map(u => ({...u, isSelected: false}))
             })
             builder.addCase(blockingUsersTC.fulfilled, (state, action) => {
-                state.map((x) => {
-                    // const updatedObject = action.payload.users.find((y) => y.id === x.id);
-                    // return updatedObject ? updatedObject : x;
-                });
+                // state.map((x) => {
+                // const updatedObject = action.payload.users.find((y) => y.id === x.id);
+                // return updatedObject ? updatedObject : x;
+                // });
             })
         },
 

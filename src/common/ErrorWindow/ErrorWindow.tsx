@@ -6,11 +6,10 @@ import {setAppErrorAC} from "../../app/app-reducer";
 const ErrorWindow = () => {
     const dispatch = useAppDispatch()
     const error = useAppSelector(s => s.app.error)
-
     const [message, setMessage] = useState("")
 
     useEffect(() => {
-        if(error) {
+        if (error) {
             setMessage(error)
             const timer = setTimeout(() => {
                 dispatch(setAppErrorAC({message: null}))

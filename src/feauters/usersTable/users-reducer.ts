@@ -1,6 +1,6 @@
 import {AxiosError} from "axios";
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {authAPI, UserType} from "../../api/authAPI";
+import {UserType} from "../../api/authAPI";
 import {setAppStatusAC} from "../../app/app-reducer";
 import {usersAPI} from "../../api/usersAPI";
 import {handleServerNetworkError} from "../../utils/error-utils";

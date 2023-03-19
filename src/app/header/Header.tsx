@@ -11,7 +11,6 @@ import {useNavigate} from "react-router-dom";
 import {routes} from "../routes/routes";
 import {LinearProgress} from "@mui/material";
 
-
 const Header = () => {
     const dispatch = useAppDispatch()
     const navigate = useNavigate()

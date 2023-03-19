@@ -1,7 +1,8 @@
 import {AxiosError} from "axios";
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {authAPI, LoginDataType, RegistrationDataType} from "../../api/authAPI";
-import {setAppStatusAC} from "../../app/app-reducer";
+import {initializeAppTC, setAppStatusAC} from "../../app/app-reducer";
+import {handleServerAppError, handleServerNetworkError} from "../../utils/error-utils";
 
 
 export const loginTC = createAsyncThunk<undefined, LoginDataType, { rejectValue: { errors: Array<string>, fieldErrors?: Array<any> } }>(('auth/login'), async (param: LoginDataType, thunkAPI) => {
@@ -9,14 +10,16 @@ export const loginTC = createAsyncThunk<undefined, LoginDataType, { rejectValue:
     try {
         const res = await authAPI.login(param)
         if (res.statusCode === 200) {
+            thunkAPI.dispatch(initializeAppTC())
             thunkAPI.dispatch(setAppStatusAC({status: 'succeeded'}))
             return
         } else {
-            console.log(res.message)
-            return thunkAPI.rejectWithValue({errors: res.message})
+            handleServerAppError(res.message, thunkAPI.dispatch)
+            return thunkAPI.rejectWithValue({errors: ["error"], fieldErrors: []})
         }
     } catch (err: any) {
-        const error: AxiosError = err
+        const error: AxiosError = err.response.data
+        handleServerNetworkError(error, thunkAPI.dispatch)
         return thunkAPI.rejectWithValue({errors: [error.message], fieldErrors: undefined})
     } finally {
         thunkAPI.dispatch(setAppStatusAC({status: 'idle'}))
@@ -32,12 +35,12 @@ export const logoutTC = createAsyncThunk(('auth/logout'), async (param, thunkAPI
             thunkAPI.dispatch(setAppStatusAC({status: 'succeeded'}))
             return
         } else {
-            console.log(res.message)
+            handleServerAppError(res, thunkAPI.dispatch)
             return thunkAPI.rejectWithValue({})
         }
     } catch (err: any) {
-        const error: AxiosError = err
-        return thunkAPI.rejectWithValue({errors: [error.message], fieldErrors: undefined})
+        handleServerNetworkError(err, thunkAPI.dispatch)
+        return thunkAPI.rejectWithValue({})
     }
 })
 
@@ -49,11 +52,13 @@ export const registrationTC = createAsyncThunk<undefined, RegistrationDataType, 
             thunkAPI.dispatch(setAppStatusAC({status: 'succeeded'}))
             return
         } else {
+            handleServerAppError(res.data, thunkAPI.dispatch)
             return thunkAPI.rejectWithValue({errors: ["error"], fieldErrors: []})
         }
     } catch (err: any) {
         thunkAPI.dispatch(setAppStatusAC({status: 'failed'}))
         const error: AxiosError = err.response.data
+        handleServerNetworkError(error, thunkAPI.dispatch)
         return thunkAPI.rejectWithValue({errors: [error.message], fieldErrors: undefined})
     }
 })

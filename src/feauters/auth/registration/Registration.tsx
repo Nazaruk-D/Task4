@@ -7,6 +7,7 @@ import {useAppDispatch, useAppSelector} from "../../../app/store/store";
 import {useNavigate} from "react-router-dom";
 import {routes} from "../../../app/routes/routes";
 import Header from "../../../app/header/Header";
+import ErrorWindow from "../../../common/ErrorWindow/ErrorWindow";
 
 const Registration = () => {
     const dispatch = useAppDispatch()
@@ -105,6 +106,7 @@ const Registration = () => {
                     </Paper>
                 </Grid>
             </Grid>
+            <ErrorWindow/>
         </>
 
     );

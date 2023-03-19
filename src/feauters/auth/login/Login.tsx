@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import s from "./Login.module.scss"
 import {Button, FormControl, FormGroup, FormLabel, Grid, Paper, TextField} from "@mui/material";
 import {useFormik} from "formik";
@@ -7,6 +7,7 @@ import {loginTC, setIsisRegisteredAC} from "../auth-reducer";
 import {routes} from "../../../app/routes/routes";
 import {useNavigate} from "react-router-dom";
 import Header from "../../../app/header/Header";
+import ErrorWindow from "../../../common/ErrorWindow/ErrorWindow";
 
 
 const Login = () => {
@@ -40,12 +41,17 @@ const Login = () => {
     })
 
 
-    if (isLoggedIn) navigate(routes.mainPage)
 
     function onClickHandler() {
         dispatch(setIsisRegisteredAC({value: false}))
         navigate(routes.registration)
     }
+
+    // useEffect(() => {
+    //     if (isLoggedIn) navigate(routes.mainPage)
+    // }, [isLoggedIn])
+
+    if (isLoggedIn) navigate(routes.mainPage)
 
     return (
         <>
@@ -92,6 +98,7 @@ const Login = () => {
                     </Paper>
                 </Grid>
             </Grid>
+            <ErrorWindow/>
         </>
     );
 };

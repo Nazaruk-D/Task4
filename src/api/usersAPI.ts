@@ -1,6 +1,5 @@
 import {instance} from "./instance";
 import {ResponseType, UserType} from "./authAPI";
-import {DomainUsersType} from "../feauters/usersTable/users-reducer";
 
 
 export const usersAPI = {

@@ -9,6 +9,8 @@ import {changeStatusUsersTC, changeAllUserStatusAC, fetchUsersTC, deleteUsersTC}
 import {routes} from "../../app/routes/routes";
 import {useNavigate} from "react-router-dom";
 import Header from "../../app/header/Header";
+import {logoutTC} from "../auth/auth-reducer";
+import ErrorWindow from "../../common/ErrorWindow/ErrorWindow";
 
 
 const UsersTable = () => {
@@ -17,6 +19,7 @@ const UsersTable = () => {
     const isLoggedIn = useAppSelector(s => s.auth.isLoggedIn)
     const [isAllUsers, setIsAllUsers] = useState(false)
     const users = useAppSelector(s => s.users)
+    const userId = useAppSelector(s => s.app.userId)
 
     const selectedUsers = () => {
         const selectedUsers: number[] = [];
@@ -30,18 +33,25 @@ const UsersTable = () => {
     }
 
     const blockStatusUsers = () => {
-        dispatch(changeStatusUsersTC({ids: selectedUsers(), status: "blocked"}))
-
+        const ids = selectedUsers()
+        dispatch(changeStatusUsersTC({ids: ids, status: "blocked"}))
+        if(ids.includes(userId!)) {
+            dispatch(logoutTC())
+        }
     }
 
     const activeStatusUsers = () => {
         dispatch(changeStatusUsersTC({ids: selectedUsers(), status: "active"}))
-
     }
 
     const deleteUsers = () => {
+        const ids = selectedUsers()
         dispatch(deleteUsersTC({ids: selectedUsers()}))
+        if(ids.includes(userId!)) {
+            dispatch(logoutTC())
+        }
     }
+
     useEffect(() => {
         dispatch(fetchUsersTC())
     }, [dispatch])
@@ -114,6 +124,7 @@ const UsersTable = () => {
                     </Table>
                 </TableContainer>
             </div>
+            <ErrorWindow/>
         </>
 
     );

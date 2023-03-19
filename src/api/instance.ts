@@ -1,7 +1,8 @@
 import axios from 'axios'
 
+const { REACT_APP_LOCAL_API_URL, REACT_APP_REMOTE_API_URL } = process.env;
+
 export const instance = axios.create({
-    // baseURL: 'https://backend-tesla-h2x8me62x-nazaruk-d.vercel.app',
-    baseURL: 'http://localhost:7542/',
+    baseURL: process.env.NODE_ENV === 'production' ? REACT_APP_REMOTE_API_URL : REACT_APP_LOCAL_API_URL,
     withCredentials: true,
 })

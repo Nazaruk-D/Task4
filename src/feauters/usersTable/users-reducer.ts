@@ -3,6 +3,7 @@ import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {authAPI, UserType} from "../../api/authAPI";
 import {setAppStatusAC} from "../../app/app-reducer";
 import {usersAPI} from "../../api/usersAPI";
+import {handleServerNetworkError} from "../../utils/error-utils";
 
 
 export const fetchUsersTC = createAsyncThunk(('users/fetch'), async (param, {dispatch, rejectWithValue}) => {
@@ -14,7 +15,9 @@ export const fetchUsersTC = createAsyncThunk(('users/fetch'), async (param, {dis
     } catch (err: any) {
         dispatch(setAppStatusAC({status: 'failed'}))
         const error: AxiosError = err
-        console.log(error)
+        // console.log(error)
+        // return rejectWithValue({})
+        handleServerNetworkError(error, dispatch)
         return rejectWithValue(null)
     } finally {
         dispatch(setAppStatusAC({status: 'idle'}))
@@ -26,9 +29,11 @@ export const changeStatusUsersTC = createAsyncThunk(('auth/changeStatus'), async
     try {
         const res = await usersAPI.changeStatusUsers(param)
         thunkAPI.dispatch(setAppStatusAC({status: 'succeeded'}))
+        console.log(res.data)
         return {value: res.data}
     } catch (err: any) {
-        const error: AxiosError = err
+        const error: AxiosError = err.response.data
+        handleServerNetworkError(error, thunkAPI.dispatch)
         return thunkAPI.rejectWithValue({errors: [error.message], fieldErrors: undefined})
     } finally {
         thunkAPI.dispatch(setAppStatusAC({status: 'idle'}))
@@ -42,7 +47,8 @@ export const deleteUsersTC = createAsyncThunk(('auth/delete'), async (param: { i
         thunkAPI.dispatch(setAppStatusAC({status: 'succeeded'}))
         return res.data.ids
     } catch (err: any) {
-        const error: AxiosError = err
+        const error: AxiosError = err.response.data
+        handleServerNetworkError(error, thunkAPI.dispatch)
         return thunkAPI.rejectWithValue({errors: [error.message], fieldErrors: undefined})
     } finally {
         thunkAPI.dispatch(setAppStatusAC({status: 'idle'}))

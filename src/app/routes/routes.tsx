@@ -13,7 +13,7 @@ export const router = createBrowserRouter([
     {
         path: routes.mainPage,
         element: <UsersTable/>,
-        errorElement: <div>Error</div>
+        errorElement: <div>Error page</div>
     },
     {
         path: routes.login,

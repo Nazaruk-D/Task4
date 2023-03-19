@@ -4,9 +4,9 @@ import Registration from "../../feauters/auth/registration/Registration";
 import UsersTable from "../../feauters/usersTable/UsersTable";
 
 export const routes = {
-    mainPage: '/',
-    login: '/login',
-    registration: '/registration',
+    mainPage: '/Task4/',
+    login: '/Task4/login',
+    registration: '/Task4/registration',
 }
 
 export const router = createBrowserRouter([

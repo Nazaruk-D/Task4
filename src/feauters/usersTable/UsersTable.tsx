@@ -19,7 +19,7 @@ const UsersTable = () => {
 
     useEffect(() => {
         if (!isLoggedIn) navigate(routes.login)
-    }, [isLoggedIn])
+    }, [isLoggedIn, navigate])
 
     return (
         <div>

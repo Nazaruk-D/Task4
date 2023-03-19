@@ -12,7 +12,7 @@ function App() {
 
     useEffect(() => {
         dispatch(initializeAppTC())
-    }, [])
+    }, [dispatch])
 
     if (!isInitialized) {
         return <div

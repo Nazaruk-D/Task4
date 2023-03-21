@@ -50,7 +50,7 @@ const CustomTable = () => {
             <div className={s.toolbarContainer}>
                 <div className={s.toolbar}>
                     <div className={s.icon}>
-                        <Button variant="outlined" color={"error"} onClick={blockStatusUsers}>Blocked</Button>
+                        <Button variant="outlined" color={"error"} onClick={blockStatusUsers}>Block</Button>
                     </div>
                     <div className={s.icon}>
                         <RestoreIcon fontSize={"medium"} onClick={activeStatusUsers}/>
